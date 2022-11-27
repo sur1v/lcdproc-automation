@@ -1,0 +1,23 @@
+version: '3'
+services:
+  lcdd:
+    image: lcdproc
+    volumes:
+      - LCDd.conf:/etc/LCDd.conf:ro
+    ports:
+      - 13666:13666
+    devices:
+      - "/dev/i2c-1:/dev/i2c-1"
+    restart: always
+
+  lcdproc:
+    image: lcdproc
+    privileged: true
+    command: [ "lcdproc", "-s", "lcdd", "-f", "-c", "/etc/lcdproc.conf", "L" ]
+    hostname: h1n1
+    volumes:
+      - lcdproc.conf:/etc/lcdproc.conf:ro
+    restart: always
+    depends_on:
+      - lcdd
+
